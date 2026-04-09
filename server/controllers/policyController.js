@@ -150,4 +150,3 @@ exports.deletePolicy = async (req, res) => {
   }
 
 };
-// for check commit
