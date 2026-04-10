@@ -153,19 +153,11 @@ exports.exportPolicyExcel = async (req, res) => {
       align: 'left'
     });
 
-    // Client info in elegant two-column layout
+    // Client info in elegant two-column layout (Removed account numbers and CIF)
     const clientInfo = [
       ['Full Name', `${user.firstName} ${user.secondName || ''}`.trim(), 'Account Type', user.accountType],
-      ['Primary Account', user.accountNumber1 || '—', 'CIF Number', user.cifNumber1 || '—']
-    ];
-
-    if (user.accountNumber2) {
-      clientInfo.push(['Secondary Account', user.accountNumber2 || '—', 'CIF Number', user.cifNumber2 || '—']);
-    }
-
-    clientInfo.push(
       ['Mobile Number', user.mobileNumber || '—', 'Nominee', user.nomineeName || '—']
-    );
+    ];
 
     clientInfo.forEach((info, index) => {
       const row = sheet.addRow(info);
@@ -190,7 +182,8 @@ exports.exportPolicyExcel = async (req, res) => {
     });
 
     const policyInfo = [
-      ['Policy Number', policy._id.toString(), 'Status', 'Active'],
+      ['Account Number', policy.accountNumber || '—', 'Status', 'Active'],
+      ['Policy Holder Name', policy.nameOfPolicyHolder || '—', 'Relation with Account Holder', policy.relationWithAccountHolder || '—'],
       ['Issue Date', new Date(policy.policyOpendate).toLocaleDateString(), 'Maturity Date', policy.PolicyCloseDate ? new Date(policy.PolicyCloseDate).toLocaleDateString() : '—'],
       ['Monthly Premium', policy.monthlyAmount, 'Maturity Amount', policy.maturityAmount],
       ['Total Investment', policy.totalInvestmentAmount, 'Remaining', policy.leftInvestmentAmount || 0]
@@ -199,9 +192,9 @@ exports.exportPolicyExcel = async (req, res) => {
     policyInfo.forEach((info, index) => {
       const row = sheet.addRow(info);
       styleCell(row.getCell(1), { bold: true, bgColor: colors.lightBg.argb, fontColor: colors.primary.argb });
-      styleCell(row.getCell(2), { bgColor: colors.white.argb, numFmt: index >= 2 ? '"₹"#,##0.00' : null });
+      styleCell(row.getCell(2), { bgColor: colors.white.argb, numFmt: index >= 3 ? '"₹"#,##0.00' : null });
       styleCell(row.getCell(3), { bold: true, bgColor: colors.lightBg.argb, fontColor: colors.primary.argb });
-      styleCell(row.getCell(4), { bgColor: colors.white.argb, numFmt: index >= 2 ? '"₹"#,##0.00' : null });
+      styleCell(row.getCell(4), { bgColor: colors.white.argb, numFmt: index >= 3 ? '"₹"#,##0.00' : null });
     });
 
     sheet.addRow([]); // Spacer
@@ -607,4 +600,4 @@ exports.exportMonthlyReport = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
-};// ave mne em ke kaya action pr tare mail moklavo 6 ??? and haa apde ek files levi padse when create a accountholder that is email baby ha baby haa to pela e input lai lav pachi tu ke ohk 
+};

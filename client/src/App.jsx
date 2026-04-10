@@ -7,7 +7,9 @@ import {
   Plus, X, Edit, LayoutDashboard, Menu, Wallet,
   TrendingUp, CreditCard, ChevronRight, UserCircle,
   Briefcase,
-  Download, 
+  Download,
+  Phone,
+  Mail, 
 } from 'lucide-react';
 
 // --- API Configuration ---
@@ -425,8 +427,7 @@ const UsersPage = ({ onSelectUser }) => {
   const [filterType, setFilterType] = useState('All');
 
   const initialUserForm = {
-    firstName: '', secondName: '', email:'', accountNumber1: '', accountNumber2: '',
-    cifNumber1: '', cifNumber2: '', mobileNumber: '', nomineeName: '', accountType: 'First Slot'
+    firstName: '', secondName: '', email:'', mobileNumber: '', nomineeName: '', accountType: 'First Slot'
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userForm, setUserForm] = useState(initialUserForm);
@@ -532,8 +533,7 @@ const UsersPage = ({ onSelectUser }) => {
       const matchesSearch =
         user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (user.nomineeName && user.nomineeName.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (user.mobileNumber && user.mobileNumber.includes(searchQuery)) ||
-        user.accountNumber1.includes(searchQuery);
+        (user.mobileNumber && user.mobileNumber.includes(searchQuery));
 
       const matchesFilter = filterType === 'All' || user.accountType === filterType;
 
@@ -663,16 +663,7 @@ const UsersPage = ({ onSelectUser }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-sm bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <div>
-                  <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider block mb-0.5">Primary Acc</span>
-                  <span className="font-mono text-slate-800">{user.accountNumber1}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wider block mb-0.5">CIF Number</span>
-                  <span className="font-mono text-slate-800">{user.cifNumber1 || 'N/A'}</span>
-                </div>
-              </div>
+              
 
               <div className="flex justify-between items-center text-sm pt-2">
                 <div>
@@ -705,84 +696,104 @@ const UsersPage = ({ onSelectUser }) => {
                 <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider font-semibold">
                   <th className="p-4 pl-6">Account Holder</th>
                   <th className="p-4">Contact Info</th>
-                  <th className="p-4">Primary Acc.</th>
+                 
                   <th className="p-4">Investment Status</th>
                   <th className="p-4 pr-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
-                {filteredUsers.map(user => (
-                  <tr
-                    key={user._id}
-                    onClick={() => onSelectUser(user)}
-                    className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
-                  >
-                    <td className="p-4 pl-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
-                          {user.firstName.charAt(0)}{user.secondName?.charAt(0)}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
-                            {user.firstName} {user.secondName}
-                          </div>
-                          <div className="text-xs text-slate-500 mt-0.5">
-                            Nominee: {user.nomineeName || 'N/A'}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="text-slate-800">{user.mobileNumber || 'No number provided'}</div>
-                      <div className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">
-                        {user.accountType || 'No Slot'}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="font-mono text-slate-700 bg-slate-50 px-2 py-1 rounded inline-block text-xs border border-slate-100">
-                        {user.accountNumber1}
-                      </div>
-                      {user.cifNumber1 && <div className="text-xs text-slate-500 mt-1">CIF: {user.cifNumber1}</div>}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex flex-col gap-1">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-slate-500">Total:</span>
-                          <span className="font-semibold text-slate-800">₹{user.totalInvestmentAmount?.toLocaleString() || 0}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-slate-500">Remaining:</span>
-                          <span className="font-semibold text-amber-600">₹{user.leftInvestmentAmount?.toLocaleString() || 0}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4 pr-6 text-right">
-                      <div className="flex items-center justify-end gap-2 relative z-10">
-                        <button
-                          onClick={(e) => { e.stopPropagation(); onSelectUser(user); }}
-                          className="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 rounded-lg text-xs font-medium transition-all"
-                        >
-                          View
-                        </button>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); openEditModal(user); }}
-                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                          title="Edit"
-                        >
-                          <Edit size={16} />
-                        </button>
-                        <button
-                          onClick={(e) => handleDeleteUser(e, user._id)}
-                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+           <tbody className="divide-y divide-slate-100 text-sm">
+  {filteredUsers.map((user) => (
+    <tr
+      key={user._id}
+      onClick={() => onSelectUser(user)}
+      className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+    >
+      {/* USER INFO */}
+      <td className="p-4 pl-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+            {(user.firstName?.charAt(0) || "")}
+            {(user.secondName?.charAt(0) || "")}
+          </div>
+
+          <div className="flex flex-col">
+            <div className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+              {user.firstName || "N/A"} {user.secondName || ""}
+            </div>
+
+            <div className="text-xs text-slate-500 mt-0.5">
+              Nominee: {user.nomineeName || "N/A"}
+            </div>
+          </div>
+        </div>
+      </td>
+
+      {/* CONTACT + TYPE */}
+      <td className="p-4">
+        <div className="text-slate-800">
+          {user.mobileNumber || "No number provided"}
+        </div>
+
+        <div className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">
+          {user.accountType || "No Slot"}
+        </div>
+      </td>
+
+      {/* INVESTMENT */}
+      <td className="p-4">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-slate-500">Total:</span>
+            <span className="font-semibold text-slate-800">
+              ₹{(user.totalInvestmentAmount || 0).toLocaleString()}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-slate-500">Remaining:</span>
+            <span className="font-semibold text-amber-600">
+              ₹{(user.leftInvestmentAmount || 0).toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </td>
+
+      {/* ACTIONS */}
+      <td className="p-4 pr-6 text-right">
+        <div className="flex items-center justify-end gap-2 relative z-10">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelectUser(user);
+            }}
+            className="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 rounded-lg text-xs font-medium transition-all"
+          >
+            View
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openEditModal(user);
+            }}
+            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+            title="Edit"
+          >
+            <Edit size={16} />
+          </button>
+
+          <button
+            onClick={(e) => handleDeleteUser(e, user._id)}
+            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+            title="Delete"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
             </table>
           </div>
         </div>
@@ -818,27 +829,7 @@ const UsersPage = ({ onSelectUser }) => {
                   <input type="text" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
                     value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} placeholder="example@gmail.com" />
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Primary Account Number <span className="text-red-500">*</span></label>
-                  <input type="text" required className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all font-mono text-sm"
-                    value={userForm.accountNumber1} onChange={e => setUserForm({ ...userForm, accountNumber1: e.target.value })} placeholder="0000000000" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Secondary Account Number</label>
-                  <input type="text" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all font-mono text-sm"
-                    value={userForm.accountNumber2} onChange={e => setUserForm({ ...userForm, accountNumber2: e.target.value })} placeholder="Optional" />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Primary CIF Number <span className="text-red-500">*</span></label>
-                  <input type="text" required className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all font-mono text-sm"
-                    value={userForm.cifNumber1} onChange={e => setUserForm({ ...userForm, cifNumber1: e.target.value })} placeholder="CIF000000" />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Secondary CIF Number</label>
-                  <input type="text" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all font-mono text-sm"
-                    value={userForm.cifNumber2} onChange={e => setUserForm({ ...userForm, cifNumber2: e.target.value })} placeholder="Optional" />
-                </div>
+               
 
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mobile Number</label>
@@ -851,7 +842,7 @@ const UsersPage = ({ onSelectUser }) => {
                     value={userForm.nomineeName} onChange={e => setUserForm({ ...userForm, nomineeName: e.target.value })} placeholder="Jane Doe" />
                 </div>
 
-                <div className="md:col-span-2">
+                <div >
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Account Type</label>
                   <select
                     className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all bg-white"
@@ -884,7 +875,7 @@ const PoliciesPage = ({ user, onBack, onSelectPolicy }) => {
   const [error, setError] = useState('');
 
   const initialPolicyForm = {
-     monthlyAmount: '', totalInvestmentAmount: '', maturityAmount: '',
+     monthlyAmount: '', totalInvestmentAmount: '', maturityAmount: '',accountNumber: '',
     policyOpendate: '', PolicyCloseDate: '',nameOfPolicyHolder: '',RelationWithAccountHolder:''
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -900,6 +891,7 @@ const PoliciesPage = ({ user, onBack, onSelectPolicy }) => {
     try {
       const res = await api.get(`/users/${user._id}/policies`);
       setPolicies(res.data);
+      console.log('Fetched policies:', res.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch policies');
     } finally {
@@ -984,157 +976,219 @@ const PoliciesPage = ({ user, onBack, onSelectPolicy }) => {
         </button>
       </div>
 
-      {/* Profile Details Card - SaaS Style */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="bg-slate-900 px-6 sm:px-8 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-4 sm:gap-5">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-blue-500/20 rounded-full border border-blue-500/30 flex items-center justify-center text-blue-400">
-              <UserCircle size={36} className="sm:w-10 sm:h-10" />
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{user.firstName} {user.secondName}</h1>
-              <p className="text-blue-400 text-xs sm:text-sm mt-0.5 font-medium flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                {user.accountType || 'Standard Account'}
-              </p>
-            </div>
-          </div>
-          <div className="text-right hidden sm:block">
-            <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-1">Total Investment</p>
-            <p className="text-2xl font-bold text-white">₹{user.totalInvestmentAmount?.toLocaleString() || 0}</p>
-          </div>
-        </div>
-
-        <div className="px-6 sm:px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 sm:gap-x-8 text-sm bg-white">
-          <div>
-            <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">Primary Account</p>
-            <p className="font-mono font-medium text-slate-800 break-all">{user.accountNumber1}</p>
-          </div>
-          {user.accountNumber2 && (
-            <div>
-              <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">Secondary Acc.</p>
-              <p className="font-mono font-medium text-slate-800 break-all">{user.accountNumber2}</p>
-            </div>
-          )}
-          <div>
-            <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">Primary CIF</p>
-            <p className="font-mono font-medium text-slate-800 break-all">{user.cifNumber1}</p>
-          </div>
-          {user.cifNumber2 && (
-            <div>
-              <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">Secondary CIF</p>
-              <p className="font-mono font-medium text-slate-800 break-all">{user.cifNumber2}</p>
-            </div>
-          )}
-          <div>
-            <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">Contact</p>
-            <p className="font-medium text-slate-800 break-words">{user.mobileNumber || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">Nominee</p>
-            <p className="font-medium text-slate-800 break-words">{user.nomineeName}</p>
-          </div>
-          <div className="sm:hidden col-span-2 mt-2 pt-4 border-t border-slate-100">
-            <p className="text-slate-500 text-[10px] uppercase tracking-wider font-semibold mb-1">Total Investment</p>
-            <p className="text-xl font-bold text-slate-800">₹{user.totalInvestmentAmount?.toLocaleString() || 0}</p>
-          </div>
-        </div>
+     {/* Profile Details Card - Improved SaaS Style */}
+<div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  
+  {/* Header */}
+  <div className="bg-slate-900 px-6 sm:px-8 py-6 flex items-center justify-between">
+    <div className="flex items-center gap-4 sm:gap-5">
+      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-blue-500/20 rounded-full border border-blue-500/30 flex items-center justify-center text-blue-400">
+        <UserCircle size={36} className="sm:w-10 sm:h-10" />
       </div>
+
+      <div>
+        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+          {user.firstName} {user.secondName}
+        </h1>
+
+        <p className="text-blue-400 text-xs sm:text-sm mt-0.5 font-medium flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+          {user.accountType || 'Standard Account'}
+        </p>
+      </div>
+    </div>
+
+    <div className="text-right hidden sm:block">
+      <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-1">
+        Total Investment
+      </p>
+      <p className="text-2xl font-bold text-white">
+        ₹{user.totalInvestmentAmount?.toLocaleString() || 0}
+      </p>
+    </div>
+  </div>
+
+  {/* Details Section */}
+  <div className="px-6 sm:px-8 py-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 text-sm bg-white">
+
+    {/* Email */}
+    <div className="flex items-start gap-3 p-3 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/40 transition">
+      <Mail className="text-blue-500 mt-1" size={18} />
+      <div>
+        <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">
+          Email
+        </p>
+        <p className="font-semibold text-slate-800 break-words">
+          {user.email || 'N/A'}
+        </p>
+      </div>
+    </div>
+
+    {/* Contact */}
+    <div className="flex items-start gap-3 p-3 rounded-xl border border-slate-100 hover:border-green-200 hover:bg-green-50/40 transition">
+      <Phone className="text-green-500 mt-1" size={18} />
+      <div>
+        <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">
+          Contact
+        </p>
+        <p className="font-semibold text-slate-800 break-words">
+          {user.mobileNumber || 'N/A'}
+        </p>
+      </div>
+    </div>
+
+    {/* Nominee */}
+    <div className="flex items-start gap-3 p-3 rounded-xl border border-slate-100 hover:border-purple-200 hover:bg-purple-50/40 transition">
+      <Users className="text-purple-500 mt-1" size={18} />
+      <div>
+        <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">
+          Nominee
+        </p>
+        <p className="font-semibold text-slate-800 break-words">
+          {user.nomineeName || 'N/A'}
+        </p>
+      </div>
+    </div>
+
+    {/* Account Type */}
+    <div className="flex items-start gap-3 p-3 rounded-xl border border-slate-100 hover:border-amber-200 hover:bg-amber-50/40 transition">
+      <Briefcase className="text-amber-500 mt-1" size={18} />
+      <div>
+        <p className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-1">
+          Account Type
+        </p>
+        <p className="font-semibold text-slate-800 break-words">
+          {user.accountType || 'Standard'}
+        </p>
+      </div>
+    </div>
+
+    {/* Mobile View Investment */}
+    <div className="sm:hidden col-span-1 mt-2 pt-4 border-t border-slate-100">
+      <p className="text-slate-500 text-[10px] uppercase tracking-wider font-semibold mb-1">
+        Total Investment
+      </p>
+      <p className="text-xl font-bold text-slate-800">
+        ₹{user.totalInvestmentAmount?.toLocaleString() || 0}
+      </p>
+    </div>
+
+  </div>
+</div>
 
       <h3 className="text-lg font-bold text-slate-800 mt-8 mb-4">Active Policies</h3>
 
-  {/* Policies Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {policies.length === 0 ? (
-          <div className="col-span-full py-16 text-center bg-white rounded-2xl border border-dashed border-slate-300">
-            <Briefcase size={40} className="text-slate-300 mx-auto mb-3" />
-            <p className="text-base font-medium text-slate-700 mb-1">No policies found</p>
-            <p className="text-sm text-slate-500">Create a new policy to start tracking installments.</p>
-            <button onClick={openAddPolicy} className="mt-4 text-blue-600 font-medium hover:underline text-sm">
-              + Add First Policy
-            </button>
-          </div>
-        ) : (
-          policies.map(policy => (
-            <div key={policy._id} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-200 group flex flex-col">
-              <div className="p-5 sm:p-6 flex-1">
-                <div className="flex justify-between items-start sm:items-center mb-5 gap-3">
-                  <div className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full text-xs font-semibold border border-blue-100 whitespace-nowrap">
-                    <Calendar size={14} className="shrink-0" />
-                    <span>{policy.policyOpendate}</span>
-                    <span className="text-blue-300 mx-1 shrink-0">→</span>
-                    <span>{policy.PolicyCloseDate}</span>
-                  </div>
-                  <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
-                    <button onClick={() => openEditPolicy(policy)} className="p-2 sm:p-1.5 text-slate-400 hover:text-blue-600 bg-slate-50 sm:bg-transparent hover:bg-blue-50 rounded-md transition-colors" title="Edit">
-                      <Edit size={16} className="sm:w-3.5 sm:h-3.5" />
-                    </button>
-                    <button onClick={() => handleDeletePolicy(policy._id)} className="p-2 sm:p-1.5 text-slate-400 hover:text-red-600 bg-slate-50 sm:bg-transparent hover:bg-red-50 rounded-md transition-colors" title="Delete">
-                      <Trash2 size={16} className="sm:w-3.5 sm:h-3.5" />
-                    </button>
-                  </div>
-                </div>
+ {/* Policies Grid */}
+<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+  {policies.length === 0 ? (
+    <div className="col-span-full py-16 text-center bg-white rounded-2xl border border-dashed border-slate-300">
+      <Briefcase size={40} className="text-slate-300 mx-auto mb-3" />
+      <p className="text-base font-medium text-slate-700 mb-1">No policies found</p>
+      <p className="text-sm text-slate-500">Create a new policy to start tracking installments.</p>
+      <button onClick={openAddPolicy} className="mt-4 text-blue-600 font-medium hover:underline text-sm">
+        + Add First Policy
+      </button>
+    </div>
+  ) : (
+    policies.map(policy => (
+      <div key={policy._id} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-200 group flex flex-col">
+        
+        <div className="p-5 sm:p-6 flex-1">
+          
+          <div className="flex justify-between items-start sm:items-center mb-5 gap-3">
+            <div className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full text-xs font-semibold border border-blue-100 whitespace-nowrap">
+              <Calendar size={14} className="shrink-0" />
+              <span>{policy.policyOpendate}</span>
+              <span className="text-blue-300 mx-1 shrink-0">→</span>
+              <span>{policy.PolicyCloseDate}</span>
+            </div>
 
-                {/* New: Policy Holder Information */}
-                {(policy.nameOfPolicyHolder || policy.relationWithAccountHolder) && (
-                  <div className="mb-5 flex justify-between items-center">
-                    {policy.nameOfPolicyHolder && (
-                      <h3 className="text-base font-bold text-slate-800 leading-tight mb-1.5">
-                        {policy.nameOfPolicyHolder}
-                      </h3>
-                    )}
-                    {policy.relationWithAccountHolder && (
-                      <span className="inline-block px-2.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-slate-200">
-                        {policy.relationWithAccountHolder}
-                      </span>
-                    )}
-                  </div>
+            <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
+              <button onClick={() => openEditPolicy(policy)} className="p-2 sm:p-1.5 text-slate-400 hover:text-blue-600 bg-slate-50 sm:bg-transparent hover:bg-blue-50 rounded-md transition-colors" title="Edit">
+                <Edit size={16} className="sm:w-3.5 sm:h-3.5" />
+              </button>
+
+              <button onClick={() => handleDeletePolicy(policy._id)} className="p-2 sm:p-1.5 text-slate-400 hover:text-red-600 bg-slate-50 sm:bg-transparent hover:bg-red-50 rounded-md transition-colors" title="Delete">
+                <Trash2 size={16} className="sm:w-3.5 sm:h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Policy Holder Information (UPDATED) */}
+          {(policy.nameOfPolicyHolder || policy.relationWithAccountHolder || policy.accountNumber) && (
+            <div className="mb-5 flex justify-between items-center">
+              
+              <div className="flex flex-col">
+                {policy.nameOfPolicyHolder && (
+                  <h3 className="text-base font-bold text-slate-800 leading-tight mb-1.5">
+                    {policy.nameOfPolicyHolder}
+                  </h3>
                 )}
 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-end border-b border-slate-100 pb-3">
-                    <div>
-                      <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Monthly</p>
-                      <p className="text-lg font-bold text-slate-800">₹{policy.monthlyAmount?.toLocaleString()}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Target</p>
-                      <p className="text-lg font-bold text-slate-800">₹{policy.totalInvestmentAmount?.toLocaleString()}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-end pt-1">
-                    <div>
-                      <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Remaining</p>
-                      <p className="text-sm font-bold text-amber-500">₹{policy.leftInvestmentAmount?.toLocaleString()}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Maturity</p>
-                      <p className="text-sm font-bold text-green-600">₹{policy.maturityAmount?.toLocaleString()}</p>
-                    </div>
-                  </div>
-                </div>
+                {/* ✅ Account Number Added */}
+                {policy.accountNumber && (
+                  <span className="text-xs text-slate-500 font-medium">
+                    A/C: {policy.accountNumber}
+                  </span>
+                )}
               </div>
 
-              <div className="p-4 bg-slate-50 border-t border-slate-100 flex flex-row gap-2">
-                <button
-                  onClick={() => onSelectPolicy(policy)}
-                  className="flex-1 bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-700 font-semibold py-2.5 px-3 rounded-xl transition-all text-xs text-center shadow-sm"
-                >
-                  Manage Installments
-                </button>
-                <button
-                  onClick={() => handleDownloadExcel(policy._id)}
-                  className="px-4 py-2.5 bg-white border border-slate-200 text-slate-600 hover:text-green-600 hover:border-green-300 rounded-xl transition-all shadow-sm flex items-center justify-center"
-                  title="Export Excel"
-                >
-                  <FileSpreadsheet size={18} />
-                </button>
+              {policy.relationWithAccountHolder && (
+                <span className="inline-block px-2.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-slate-200">
+                  {policy.relationWithAccountHolder}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <div className="flex justify-between items-end border-b border-slate-100 pb-3">
+              <div>
+                <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Monthly</p>
+                <p className="text-lg font-bold text-slate-800">₹{policy.monthlyAmount?.toLocaleString()}</p>
+              </div>
+
+              <div className="text-right">
+                <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Target</p>
+                <p className="text-lg font-bold text-slate-800">₹{policy.totalInvestmentAmount?.toLocaleString()}</p>
               </div>
             </div>
-          ))
-        )}
+
+            <div className="flex justify-between items-end pt-1">
+              <div>
+                <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Remaining</p>
+                <p className="text-sm font-bold text-amber-500">₹{policy.leftInvestmentAmount?.toLocaleString()}</p>
+              </div>
+
+              <div className="text-right">
+                <p className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-0.5">Maturity</p>
+                <p className="text-sm font-bold text-green-600">₹{policy.maturityAmount?.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4 bg-slate-50 border-t border-slate-100 flex flex-row gap-2">
+          <button
+            onClick={() => onSelectPolicy(policy)}
+            className="flex-1 bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-700 font-semibold py-2.5 px-3 rounded-xl transition-all text-xs text-center shadow-sm"
+          >
+            Manage Installments
+          </button>
+
+          <button
+            onClick={() => handleDownloadExcel(policy._id)}
+            className="px-4 py-2.5 bg-white border border-slate-200 text-slate-600 hover:text-green-600 hover:border-green-300 rounded-xl transition-all shadow-sm flex items-center justify-center"
+            title="Export Excel"
+          >
+            <FileSpreadsheet size={18} />
+          </button>
+        </div>
+       
       </div>
+    ))
+  )}
+</div>
       {/* ADD/EDIT POLICY MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -1153,6 +1207,11 @@ const PoliciesPage = ({ user, onBack, onSelectPolicy }) => {
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Name Of Policy Holder<span className="text-red-500">*</span></label>
                 <input type="text" required className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all font-mono"
                   value={policyForm.nameOfPolicyHolder} onChange={e => setPolicyForm({ ...policyForm, nameOfPolicyHolder: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Account Number<span className="text-red-500">*</span></label>
+                <input type="text" required className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all font-mono"
+                  value={policyForm.accountNumber} onChange={e => setPolicyForm({ ...policyForm, accountNumber: e.target.value })} />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Relation With Account Holder<span className="text-red-500">*</span></label>
@@ -1268,6 +1327,8 @@ const InstallmentsPage = ({ policy, user, onBack }) => {
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to generate installments');
       setActionLoading(false);
+    }finally {
+      setActionLoading(false);
     }
   };
 
@@ -1280,6 +1341,7 @@ const InstallmentsPage = ({ policy, user, onBack }) => {
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to delete installments');
       setActionLoading(false);
+    }finally {      setActionLoading(false);
     }
   };
 

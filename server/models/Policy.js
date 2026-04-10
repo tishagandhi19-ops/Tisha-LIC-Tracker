@@ -5,7 +5,7 @@ const policySchema = new mongoose.Schema({
    nameOfPolicyHolder: { type: String, required: true },
    relationWithAccountHolder : { type: String, required: true },
     
-
+  accountNumber: { type: String, required: true },
   monthlyAmount: { type: Number, required: true },
 
   totalInvestmentAmount: { type: Number, required: true },
