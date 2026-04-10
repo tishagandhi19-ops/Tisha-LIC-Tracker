@@ -129,7 +129,7 @@ exports.updateInstallment = async (req, res) => {
 
     const allPaid = pendingInstallments.length === 0;
 
-    // 🔹 Send Email
+    // Send Email
     if (paid) {
       if (allPaid) {
         // 🎉 POLICY COMPLETED EMAIL

@@ -32,6 +32,7 @@ exports.getUsers = async (req, res) => {
     const users = await User.find({
       adminId: req.admin.id
     });
+    console.log(users);
 
     res.json(users);
 

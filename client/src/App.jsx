@@ -834,7 +834,7 @@ const UsersPage = ({ onSelectUser }) => {
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mobile Number</label>
                   <input type="text" className="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all"
-                    value={userForm.mobileNumber} onChange={e => setUserForm({ ...userForm, mobileNumber: e.target.value })} placeholder="+1 234 567 8900" />
+                    value={userForm.mobileNumber} onChange={e => setUserForm({ ...userForm, mobileNumber: e.target.value })} placeholder="9365478901" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nominee Name <span className="text-red-500">*</span></label>
