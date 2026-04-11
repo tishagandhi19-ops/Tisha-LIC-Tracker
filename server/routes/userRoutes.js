@@ -13,5 +13,5 @@ router.get("/api/users/:id", authMiddleware, userController.getUser);
 router.put("/api/users/:id", authMiddleware, userController.updateUser);
 
 router.delete("/api/users/:id", authMiddleware, userController.deleteUser);
-
+router.get("/api/policiesCount",authMiddleware,userController.getPoliciesCount);
 module.exports = router;

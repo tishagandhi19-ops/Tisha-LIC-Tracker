@@ -32,7 +32,7 @@ exports.getUsers = async (req, res) => {
     const users = await User.find({
       adminId: req.admin.id
     });
-    console.log(users);
+    
 
     res.json(users);
 
@@ -124,4 +124,27 @@ exports.deleteUser = async (req, res) => {
 
   }
 
+};
+
+exports.getPoliciesCount = async (req, res) => {
+  try {
+    // 👉 Step 1: get all users of this admin
+    const users = await User.find({
+      adminId: req.admin.id
+    }).select("_id");
+
+    const userIds = users.map(user => user._id);
+
+    // 👉 Step 2: count policies of those users
+    const totalPolicies = await Policy.countDocuments({
+      userId: { $in: userIds }
+    });
+
+    res.json({
+      totalPolicies
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };

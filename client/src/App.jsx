@@ -169,37 +169,60 @@ const DashboardPage = () => {
   const [metrics, setMetrics] = useState({ totalUsers: 0, totalInvestment: 0, totalLeft: 0, activePolicies: 0 });
   const [loading, setLoading] = useState(true);
   const [animateChart, setAnimateChart] = useState(false);
+  const [policyCount, setPolicyCount] = useState(0);
+useEffect(() => {
+  const fetchDashboardData = async () => {
+    try {
+      const res = await api.get('/users');
+      const users = res.data;
+    
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const res = await api.get('/users');
-        const users = res.data;
+      let inv = 0;
+      let left = 0;
 
-        let inv = 0;
-        let left = 0;
+      users.forEach(u => {
+        inv += (u.totalInvestmentAmount || 0);
+        left += (u.leftInvestmentAmount || 0);
+      });
 
-        users.forEach(u => {
-          inv += (u.totalInvestmentAmount || 0);
-          left += (u.leftInvestmentAmount || 0);
-        });
+      setMetrics(prev => ({
+        ...prev,
+        totalUsers: users.length,
+        totalInvestment: inv,
+        totalLeft: left,
+      }));
 
-        setMetrics({
-          totalUsers: users.length,
-          totalInvestment: inv,
-          totalLeft: left,
-          activePolicies: Math.floor(users.length * 1.5)
-        });
-      } catch (err) {
-        console.error("Dashboard data fetch error", err);
-      } finally {
-        setLoading(false);
-        // Trigger chart animation after data loads
-        setTimeout(() => setAnimateChart(true), 100);
-      }
-    };
-    fetchDashboardData();
-  }, []);
+    } catch (err) {
+      console.error("Dashboard data fetch error", err);
+    } finally {
+      setLoading(false);
+      setTimeout(() => setAnimateChart(true), 100);
+    }
+  };
+
+  fetchDashboardData();
+}, []);
+
+useEffect(() => {
+  fetchPolicesCount();
+}, []);
+
+const fetchPolicesCount = async () => { 
+  try {
+    const res = await api.get('/policiesCount');
+
+    setPolicyCount(res.data.totalPolicies);
+
+    // ✅ FIX HERE
+    setMetrics(prev => ({
+      ...prev,
+      activePolicies: res.data.totalPolicies
+    }));
+
+  } catch (err) {
+    console.error("Error fetching policies count:", err);
+  }
+};
 
   if (loading) return <LoadingSpinner />;
 

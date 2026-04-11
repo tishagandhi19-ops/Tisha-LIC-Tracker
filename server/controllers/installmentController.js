@@ -164,7 +164,7 @@ exports.updateInstallment = async (req, res) => {
         );
       } else {
         // 💰 INSTALLMENT PAID EMAIL
-        console.log("📩 Sending email to:", user.email); //ayi gyo mail jo tara ma moklavu baby ha baby mokle 6e ke mokli didho na moklavu lay taru email lakh agiya tishagandhi19@gmail.com
+        console.log("📩 Sending email to:", user.email); 
         
         await sendEmail(
           user.email,
