@@ -16,7 +16,7 @@ const sendEmail = async (to, subject, text) => {
     from: "tishagandhi1919@gmail.com",
     to,
     subject,
-    html: text // ✅ CHANGE 'text' TO 'html'
+    html: text 
   });
 };
 
