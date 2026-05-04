@@ -1121,9 +1121,9 @@ const PoliciesPage = ({ user, onBack, onSelectPolicy }) => {
           <div className="flex justify-between items-start sm:items-center mb-5 gap-3">
             <div className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full text-xs font-semibold border border-blue-100 whitespace-nowrap">
               <Calendar size={14} className="shrink-0" />
-              <span>{policy.policyOpendate}</span>
+              <span> {new Date(policy.policyOpendate).toLocaleDateString('en-GB') .replace(/\//g, '-')}</span>
               <span className="text-blue-300 mx-1 shrink-0">→</span>
-              <span>{policy.PolicyCloseDate}</span>
+              <span>{new Date(policy.PolicyCloseDate).toLocaleDateString('en-GB') .replace(/\//g, '-')}</span>
             </div>
 
             <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
@@ -1270,7 +1270,7 @@ const PoliciesPage = ({ user, onBack, onSelectPolicy }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">End Date <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Maturity Date <span className="text-red-500">*</span></label>
                   <input
                     type="date" required
                     disabled={policyForm._id && policyForm.installmentsGenerated}
@@ -1446,7 +1446,11 @@ const InstallmentsPage = ({ policy, user, onBack }) => {
         </div>
         <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
           <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Timeline</p>
-          <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-1">{localPolicy.policyOpendate} <br className="hidden sm:block" /><span className="text-slate-400 font-normal sm:hidden"> to </span><span className="hidden sm:inline text-slate-400 font-normal">to</span> {localPolicy.PolicyCloseDate}</p>
+          <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-1">{new Date(localPolicy.policyOpendate)
+    .toLocaleDateString('en-GB')
+    .replace(/\//g, '-')} <br className="hidden sm:block" /><span className="text-slate-400 font-normal sm:hidden"> to </span><span className="hidden sm:inline text-slate-400 font-normal">to</span> {new Date(localPolicy.PolicyCloseDate)
+    .toLocaleDateString('en-GB')
+    .replace(/\//g, '-')}</p>
         </div>
       </div>
 
