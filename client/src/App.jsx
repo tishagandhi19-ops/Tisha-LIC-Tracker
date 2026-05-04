@@ -11,6 +11,7 @@ import {
   Phone,
   Mail, 
 } from 'lucide-react';
+import InstallButton from './Installbutton';
 
 // --- API Configuration ---
 const BASE_URL = 'https://lic-tracker-vlp3.onrender.com/api';
@@ -1821,8 +1822,10 @@ export default function App() {
               />
             )}
           </div>
+           <InstallButton/>
         </main>
       </div>
+     
     </div>
   );
 }
