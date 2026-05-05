@@ -3,8 +3,16 @@ import { useEffect, useState } from "react";
 function InstallButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstallable, setIsInstallable] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
+    // ✅ Detect if app is already installed (PWA mode)
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      setIsInstalled(true);
+      return;
+    }
+
+    // ✅ Listen for install prompt
     const handler = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -14,7 +22,16 @@ function InstallButton() {
 
     window.addEventListener("beforeinstallprompt", handler);
 
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    // ✅ Detect when app gets installed
+    window.addEventListener("appinstalled", () => {
+      console.log("🎉 App installed");
+      setIsInstalled(true);
+      setIsInstallable(false);
+    });
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+    };
   }, []);
 
   const handleInstall = async () => {
@@ -31,6 +48,9 @@ function InstallButton() {
       setIsInstallable(false);
     }
   };
+
+  // ❌ Hide button if already installed
+  if (isInstalled) return null;
 
   return (
     <button
